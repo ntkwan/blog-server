@@ -5,7 +5,7 @@ import { CreateDto } from './dtos/user-signup.dto';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import { Role } from '../auth/roles.enum';
+import { Role } from '../auth/enums/roles.enum';
 
 @Injectable()
 export class UsersService {
@@ -113,6 +113,7 @@ export class UsersService {
                 { refreshToken: refreshToken },
                 { where: { id: id } },
             );
+            return;
         } catch (error) {
             throw new InternalServerErrorException(error.message);
         }

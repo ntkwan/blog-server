@@ -20,6 +20,7 @@ export class ATAuthGuard extends AuthGuard('jwt') {
                 err || new UnauthorizedException('Session expired or invalid')
             );
         }
+
         return user;
     }
 }

@@ -1,4 +1,5 @@
 import { IsEmail, IsString, MinLength } from 'class-validator';
+import { Role } from 'src/auth/enums/roles.enum';
 
 export class UserLoginDto {
     @IsString()
@@ -13,4 +14,7 @@ export class UserLoginDto {
     @IsString()
     @MinLength(4)
     password: string;
+
+    @IsString()
+    role: Role;
 }

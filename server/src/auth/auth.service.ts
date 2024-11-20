@@ -45,7 +45,8 @@ export class AuthService {
         try {
             const payloadAccessToken = {
                 id: user.id,
-                email: user.email,
+                username: user.username,
+                role: user.role,
             };
 
             const accessToken =
@@ -53,7 +54,8 @@ export class AuthService {
 
             const payloadRefreshToken = {
                 sub: user.id,
-                username: user.username,
+                email: user.email,
+                role: user.role,
             };
 
             const refreshToken = await this.jwtService.signAsync(
@@ -65,16 +67,14 @@ export class AuthService {
             );
 
             await this.usersService.updateRefreshToken(user.id, refreshToken);
-            await this.usersService.updateOtp(user.id, null, null);
+            //await this.usersService.updateOtp(user.id, null, null);
 
             return {
                 refreshToken,
                 accessToken,
             };
         } catch (error) {
-            throw new BadRequestException('Error signing in', {
-                cause: error.message,
-            });
+            throw new BadRequestException(error.message);
         }
     }
 
@@ -111,14 +111,16 @@ export class AuthService {
             }
             const payloadAccessToken = {
                 id: user.id,
-                email: user.email,
+                username: user.username,
+                role: user.role,
             };
 
             const newAT = await this.jwtService.signAsync(payloadAccessToken);
 
             const payloadRefreshToken = {
                 sub: user.id,
-                username: user.username,
+                email: user.email,
+                role: user.role,
             };
 
             const newRT = await this.jwtService.signAsync(payloadRefreshToken, {

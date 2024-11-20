@@ -13,7 +13,12 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { ATAuthGuard } from './guards/at-auth.guard';
 import { RTAuthGuard } from './guards/rt-auth.guard';
-import { ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
+import {
+    ApiResponse,
+    ApiOperation,
+    ApiBody,
+    ApiBearerAuth,
+} from '@nestjs/swagger';
 import { TokensEntity } from './entities/tokens.entity';
 import { CredEntity } from './entities/creds.entity';
 import { AuthLoginDto } from './dtos/auth-login.dto';
@@ -49,6 +54,7 @@ export class AuthController {
     }
 
     @ApiOperation({ summary: 'Get profile with credentials' })
+    @ApiBearerAuth('access-token')
     @Get('get-my-profile')
     @ApiResponse({
         status: 200,
@@ -82,6 +88,7 @@ export class AuthController {
         });
     }
 
+    @ApiBearerAuth('access-token')
     @ApiOperation({ summary: 'Sign-out and clear credentials' })
     @ApiResponse({
         status: 200,
@@ -98,7 +105,8 @@ export class AuthController {
         });
     }
 
-    @ApiOperation({ summary: 'Refresh tokens with credentials' })
+    @ApiBearerAuth('access-token')
+    @ApiOperation({ summary: 'Refresh tokens with credentials. Provide refresh token, not access token to the field' })
     @Get('refresh-token')
     @UseGuards(RTAuthGuard)
     @ApiResponse({

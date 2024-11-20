@@ -8,7 +8,7 @@ import {
     UpdatedAt,
     IsEmail,
 } from 'sequelize-typescript';
-import { Role } from '../../auth/roles.enum';
+import { Role } from '../../auth/enums/roles.enum';
 
 @Table({
     tableName: 'accounts',
@@ -43,7 +43,7 @@ export class User extends Model {
     password: string;
 
     @Column({
-        type: DataType.STRING,
+        type: DataType.STRING(500),
         field: 'refresh_token',
     })
     refreshToken: string;
