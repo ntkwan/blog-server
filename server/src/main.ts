@@ -1,12 +1,37 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { json, urlencoded } from 'express';
+import * as compression from 'compression';
+import * as cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import * as morgan from 'morgan';
+
+const setMiddleware = (app: NestExpressApplication) => {
+    app.use(helmet());
+
+    app.enableCors({
+        credentials: true,
+        origin: (_, callback) => callback(null, true),
+    });
+
+    app.use(morgan('combined'));
+
+    app.use(compression());
+
+    app.use(cookieParser());
+};
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+        logger: new Logger('[]'),
+    });
+    app.useLogger(new Logger('[APP]'));
+    const logger = new Logger('[APP]');
+    setMiddleware(app);
 
     app.useGlobalPipes(
         new ValidationPipe({
@@ -32,6 +57,6 @@ async function bootstrap() {
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, documentFactory);
 
-    await app.listen(port);
+    await app.listen(port, () => logger.warn(`> Listening on port ${port}`));
 }
 bootstrap();
