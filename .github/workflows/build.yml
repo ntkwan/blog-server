@@ -20,10 +20,10 @@ jobs:
                   node-version: "22"
 
             - name: Install dependencies
-              run: cd server && pnpm install && cd ../client && pnpm install
+              run: cd server && npm install
 
             - name: Run ESLint
-              run: cd server && pnpm lint && cd ../client && pnpm lint
+              run: cd server && npm lint
 
             - name: Run Prettier (server)
-              run: cd server && pnpm format
+              run: cd server && npm format
