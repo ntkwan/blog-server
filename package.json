@@ -1,4 +1,7 @@
 {
+    "dependencies": {
+        "@nestjs/mapped-types": "*"
+    },
     "name": "blog-server",
     "version": "1.0.0",
     "description": "",

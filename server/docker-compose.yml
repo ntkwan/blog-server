@@ -1,0 +1,20 @@
+version: '3'
+services:
+    postgres:
+        image: postgres:15
+        container_name: market-postgres
+        ports:
+            - "${DB_PORT}:5432"
+        restart: always
+        volumes:
+            - ./docker/postgres:/var/lib/postgresql/data
+        logging:
+            driver: 'json-file'
+            options:
+                # need to tune later after running in production
+                max-size: '100m'
+                max-file: '20'
+        environment:
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
