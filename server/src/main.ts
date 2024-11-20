@@ -9,6 +9,7 @@ import * as compression from 'compression';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import * as morgan from 'morgan';
+import { UsersService } from './users/users.service';
 
 const setMiddleware = (app: NestExpressApplication) => {
     app.use(helmet());
@@ -42,6 +43,8 @@ async function bootstrap() {
 
     const configService = app.get(ConfigService);
     const port = configService.get('SERVER_PORT');
+    const userService = app.get(UsersService);
+    await userService.createDefaultAdmin();
 
     app.use(json());
     app.use(urlencoded({ extended: true }));

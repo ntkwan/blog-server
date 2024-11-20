@@ -1,6 +1,6 @@
 // Add new role here
 export enum Role {
-    ADMINISTRATOR = 'administrator',
+    ADMIN = 'administrator',
     EDITOR = 'editor',
     READER = 'reader',
 }

@@ -49,11 +49,19 @@ export class User extends Model {
     refreshToken: string;
 
     @CreatedAt
-    @Column({ field: 'created_at' })
+    @Column({
+        field: 'created_at',
+        type: DataType.DATE,
+        defaultValue: DataType.NOW,
+    })
     createdAt: Date;
 
     @UpdatedAt
-    @Column({ field: 'updated_at' })
+    @Column({
+        field: 'updated_at',
+        type: DataType.DATE,
+        allowNull: true,
+    })
     updatedAt: Date;
 
     @Column({

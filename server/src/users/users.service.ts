@@ -153,4 +153,36 @@ export class UsersService {
         }
         await user.destroy();
     }
+
+    async createDefaultAdmin() {
+        try {
+            const adminExists = await this.userModel.findOne<User>({
+                where: {
+                    role: Role.ADMIN,
+                },
+            });
+
+            if (adminExists === null) {
+                // Create the default admin user if not found
+                const adminPassword: string =
+                    this.configService.get('ADMIN_PASSWORD');
+                const hashedPassword = await this.hashPassword(adminPassword);
+                const admin = await User.create({
+                    username: this.configService.get('ADMIN_USERNAME'),
+                    email: this.configService.get('ADMIN_EMAIL'),
+                    password: hashedPassword,
+                    role: Role.ADMIN,
+                });
+
+                console.log('Admin account created successfully', admin);
+            } else {
+                console.log('Admin account already exists');
+            }
+        } catch (error) {
+            console.log(
+                'Error creating default admin account: ',
+                error.message,
+            );
+        }
+    }
 }
