@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Sequelize } from 'sequelize-typescript';
 @Injectable()
 export class AppService {
