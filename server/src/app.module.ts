@@ -9,6 +9,7 @@ import { User } from './users/entities/user.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ArticlesModule } from './articles/articles.module';
 import { SharedModule } from './shared/shared.module';
+
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -27,7 +28,7 @@ import { SharedModule } from './shared/shared.module';
                     },
                 },
                 defaults: {
-                    from: `"[NO-REPLY] blog server" <no-repy@blog-server>`, // Sender's email address
+                    from: `"[NO-REPLY] blog server" <no-reply@blog-server>`, // Sender's email address
                 },
             }),
             inject: [ConfigService],
@@ -35,24 +36,26 @@ import { SharedModule } from './shared/shared.module';
 
         SequelizeModule.forRootAsync({
             imports: [ConfigModule],
-            useFactory: (configService: ConfigService) => ({
-                dialect: 'postgres',
-                dialectModule: pg,
-                host: configService.get('DATABASE'),
-                port: configService.get('DB_PORT'),
-                username: configService.get('DB_USERNAME'),
-                password: configService.get('DB_PASSWORD'),
-                database: configService.get('DB_NAME'),
-                autoLoadModels: true,
-                synchronize: true,
-                models: [User],
-                dialectOptions: {
-                    ssl: {
-                        require: true,
-                        rejectUnauthorized: false,
-                    },
-                },
-            }),
+            useFactory: (configService: ConfigService) => {
+                const isDevelopment =
+                    configService.get('ENV') === 'development';
+
+                return {
+                    dialect: 'postgres',
+                    dialectModule: pg,
+                    host: configService.get('DATABASE'),
+                    port: configService.get('DB_PORT'),
+                    username: configService.get('DB_USERNAME'),
+                    password: configService.get('DB_PASSWORD'),
+                    database: configService.get('DB_NAME'),
+                    autoLoadModels: true,
+                    synchronize: true,
+                    models: [User],
+                    dialectOptions: !isDevelopment
+                        ? { ssl: { require: true, rejectUnauthorized: false } }
+                        : { ssl: false },
+                };
+            },
             inject: [ConfigService],
         }),
         AuthModule,
