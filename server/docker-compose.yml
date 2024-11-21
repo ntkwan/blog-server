@@ -18,3 +18,13 @@ services:
             POSTGRES_USER: ${DB_USERNAME}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
             POSTGRES_DB: ${DB_NAME}
+    backend:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: blog-server
+        restart: unless-stopped
+        depends_on:
+            - postgres
+        ports:
+            - 5000:5000
