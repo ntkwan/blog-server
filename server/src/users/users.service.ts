@@ -186,4 +186,22 @@ export class UsersService {
             );
         }
     }
+
+    async updateRole(id: string, role: string): Promise<void> {
+        try {
+            const user = await this.userModel.findOne<User>({
+                where: { id },
+            });
+
+            if (user.role === role) {
+                throw new InternalServerErrorException(
+                    'User already has this role',
+                );
+            }
+
+            await this.userModel.update({ role: role }, { where: { id: id } });
+        } catch (error) {
+            throw new InternalServerErrorException(error.message);
+        }
+    }
 }

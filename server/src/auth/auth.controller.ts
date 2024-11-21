@@ -7,6 +7,8 @@ import {
     Request,
     Res,
     Get,
+    Param,
+    Put,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -24,6 +26,10 @@ import { CredEntity } from './entities/creds.entity';
 import { AuthLoginDto } from './dtos/auth-login.dto';
 import { AuthSignUpDto } from './dtos/auth-signup.dto';
 import { ForgotPasswordDto, ResetPasswordDto } from './dtos/auth-psw-recovery';
+import { ChangeRoleDto } from './dtos/change-role.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
+import { Role } from './enums/roles.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -106,7 +112,10 @@ export class AuthController {
     }
 
     @ApiBearerAuth('access-token')
-    @ApiOperation({ summary: 'Refresh tokens with credentials. Provide refresh token, not access token to the field' })
+    @ApiOperation({
+        summary:
+            'Refresh tokens with credentials. Provide refresh token, not access token to the field',
+    })
     @Get('refresh-token')
     @UseGuards(RTAuthGuard)
     @ApiResponse({
@@ -177,6 +186,51 @@ export class AuthController {
         );
         res.send({
             message: 'Password has been reset successfully',
+        });
+    }
+
+    @ApiBearerAuth('access-token')
+    @ApiOperation({
+        summary:
+            'Change user role by ID [ADMIN]. There are 3 roles: administrator (ADMIN), editor (EDITOR) and reader (READER). Cannot change role to ADMIN',
+    })
+    @Put('change-role/:id')
+    @ApiBody({ type: ChangeRoleDto })
+    @ApiResponse({
+        status: 200,
+        description: 'User role changed successfully',
+    })
+    @HttpCode(200)
+    @UseGuards(ATAuthGuard, RolesGuard)
+    @Roles(Role.ADMIN)
+    async changeRole(
+        @Param('id') id: string,
+        @Request() req: any,
+        @Res() res: Response,
+    ): Promise<void> {
+        const role = req.body.role;
+        if (
+            role !== Role.ADMIN &&
+            role !== Role.EDITOR &&
+            role !== Role.READER
+        ) {
+            res.send({
+                statusCode: 404,
+                message: 'Role is not valid',
+            });
+        }
+
+        if (role === Role.ADMIN) {
+            res.send({
+                statusCode: 404,
+                message: 'Cannot change role to ADMIN',
+            });
+        }
+
+        await this.authService.changeRole(req.user, id, role);
+        res.send({
+            statusCode: 200,
+            message: 'User role has been changed successfully',
         });
     }
 }

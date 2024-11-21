@@ -8,6 +8,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { AccessTokenStrategy } from './strategies/at.strategy';
 import { RefreshTokenStrategy } from './strategies/rt.strategy';
+import { AccessControlService } from 'src/shared/shared.service';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { RefreshTokenStrategy } from './strategies/rt.strategy';
         LocalStrategy,
         AccessTokenStrategy,
         RefreshTokenStrategy,
+        AccessControlService,
     ],
 })
 export class AuthModule {}

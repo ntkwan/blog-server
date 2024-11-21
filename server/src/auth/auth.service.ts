@@ -204,4 +204,17 @@ export class AuthService {
             });
         }
     }
+
+    async changeRole(user: User, id: string, role: string): Promise<void> {
+        try {
+            if (user.id === id) {
+                throw new BadRequestException('Cannot change your own role');
+            }
+
+            await this.usersService.updateRole(id, role);
+        } catch (error) {
+            console.log(error.message);
+            throw new InternalServerErrorException(error.message);
+        }
+    }
 }
