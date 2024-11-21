@@ -5,16 +5,6 @@ import { Sequelize } from 'sequelize-typescript';
 export class AppService {
     constructor(private sequelize: Sequelize) {}
 
-    @ApiOperation({ summary: 'Check the status of the server' })
-    @ApiResponse({
-        status: 200,
-        description: 'Server is running',
-        schema: {
-            example: {
-                status: 'ok',
-            },
-        },
-    })
     async getStatus() {
         try {
             await this.sequelize.authenticate();
@@ -23,7 +13,7 @@ export class AppService {
             };
         } catch (error) {
             return {
-                status: 'error',
+                statusCode: 500,
                 error: error.message,
             };
         }
