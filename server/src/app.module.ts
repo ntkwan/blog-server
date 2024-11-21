@@ -47,7 +47,10 @@ import { SharedModule } from './shared/shared.module';
                 synchronize: true,
                 models: [User],
                 dialectOptions: {
-                    ssl: false,
+                    ssl: {
+                        require: true,
+                        rejectUnauthorized: false,
+                    },
                 },
             }),
             inject: [ConfigService],
