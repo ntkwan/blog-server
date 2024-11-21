@@ -69,4 +69,6 @@ $ npm run test:cov
 
 ## Usage
 
--   `blog-server` only provides default administrator account with personal setup in `.env` file with field `ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`. You have to sign up in order to create new account (reader role by default). To experience new role, there is `/auth/change-role/{id}` endpoint for granting roles to any accounts. Read more in [docs](https://blog-server-u1z6.onrender.com/docs#/Auth/AuthController_changeRole)
+-   Experience APIs through Swagger API documentation (host/docs). Any specifications should be indicated by summary of each API.
+-   `blog-server` only provides default administrator account with personal setup in `.env` file with field `ADMIN_USERNAME`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`. You have to sign up in order to create new account (reader role by default). To experience new role, there is `/auth/change-role/{id}` endpoint for granting roles to any accounts. Read more in [docs](https://blog-server-u1z6.onrender.com/docs#/Auth/AuthController_changeRole).
+-   For password recovery feature, you have to setup mail host for sending users OTP via email. Setup that in these fields in `.env` file: `MAIL_HOST`, `MAIL_USER`, `MAIL_PASSWORD`, `MAIL_FROM`, `MAIL_PORT` (587 for default gmail port). This feature requires valid email for both sender and receiver.
